@@ -53,7 +53,7 @@ var
 	Ch: char;
 
 begin
-	Assign (OutFile, '/Users/cy4n/Desktop/frac/biomorph.pbm');
+	Assign (OutFile, 'biomorph.pbm');
 	Rewrite (OutFile);
 	for Ch in 'P4 ' + IntToStr (PixlWidth) + ' ' + IntToStr (PixlHeight) + LineEnding do Write (OutFile, Ord (Ch));
 	for Y := 0 to PixlHeight-1 do begin
@@ -75,23 +75,3 @@ begin
 	WriteLn;
 end.
 {$POP}
-
-(*
-int const
-_ ScreenHeight = 63,
-_ ScreenWidth = 47
-float const
-_ MinReal := -2.0,
-_ MaxReal := 2.0,
-_ MinImag := -2.0,
-_ MaxImag := 2.0
-float const
-_ SclReal := (MaxReal - MinReal) / ScreenWidth,
-_ SclImag := (MaxImag - MinImag) / ScreenHeight
-
-int function BiomorphA (int X, Y) is
-	complex var Z
-	
-;
-
-*)
