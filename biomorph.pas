@@ -7,19 +7,11 @@ const
 
 	MinReal = -5.0;
 	MaxReal = 5.0;
-	SclReal = 10.0 / 512.0; (* (MaxReal - MinReal) / ScreenWidth  *)
+	SclReal = 10.0 / 512.0; (* (MaxReal - MinReal) / ScreenWidth *)
 	
 	MinImag = -5.0;
 	MaxImag = 5.0;
-	SclImag = 10.0 / 512.0; (* (MaxReal - MinReal) / ScreenWidth  *)
-
-//	C: complex = (Re: 0.0; Im: 0.0);
-
-function CCube (Z: complex): complex; inline;
-begin
-	CCube.Re := Z.Re * Z.Re * Z.Re - 3 * Z.Re * Z.Im * Z.Im;
-	CCube.Im := 3 * Z.Re * Z.Re * Z.Im - Z.Im * Z.Im * Z.Im 
-end;
+	SclImag = 10.0 / 512.0; (* (MaxReal - MinReal) / ScreenWidth *)
 
 function FZ (Z: complex): complex; inline;
 const
@@ -28,8 +20,7 @@ begin
 	FZ := Z * Z + C;
 end;
 
-{$PUSH} {$BOOLEVAL OFF}
-function BiomorphA (X, Y: nativeUInt): boolean;
+function Biomorph (X, Y: nativeUInt): boolean;
 var
 	Z: complex;
 	Iter: nativeUInt;
@@ -40,10 +31,12 @@ begin
 		Z := FZ (Z);
 		if Z.Re * Z.Re + Z.Im * Z.Im > 100.0 then break;
 	end;
+	{$PUSH} {$BOOLEVAL OFF}
 	if (Abs (Z.Re) < 10.0) or (Abs (Z.Im) < 10.0) then
-		BiomorphA := True
+		Biomorph := True
 	else
-		BiomorphA := False
+		Biomorph := False
+	{$POP}
 end;
 
 var
@@ -60,18 +53,17 @@ begin
 		Write (#13, Y);
 		X := 0;
 		while X < PixlWidth do begin
-			Byt := Ord (BiomorphA (X, Y));
-			Byt := (Byt shl 1) + Ord (BiomorphA (X+1, Y));
-			Byt := (Byt shl 1) + Ord (BiomorphA (X+2, Y));
-			Byt := (Byt shl 1) + Ord (BiomorphA (X+3, Y));
-			Byt := (Byt shl 1) + Ord (BiomorphA (X+4, Y));
-			Byt := (Byt shl 1) + Ord (BiomorphA (X+5, Y));
-			Byt := (Byt shl 1) + Ord (BiomorphA (X+6, Y));
-			Byt := (Byt shl 1) + Ord (BiomorphA (X+7, Y));
+			Byt := Ord (Biomorph (X, Y));
+			Byt := (Byt shl 1) + Ord (Biomorph (X+1, Y));
+			Byt := (Byt shl 1) + Ord (Biomorph (X+2, Y));
+			Byt := (Byt shl 1) + Ord (Biomorph (X+3, Y));
+			Byt := (Byt shl 1) + Ord (Biomorph (X+4, Y));
+			Byt := (Byt shl 1) + Ord (Biomorph (X+5, Y));
+			Byt := (Byt shl 1) + Ord (Biomorph (X+6, Y));
+			Byt := (Byt shl 1) + Ord (Biomorph (X+7, Y));
 			X := X + 8;
 			Write (OutFile, Byt);
 		end;
 	end;
 	WriteLn;
 end.
-{$POP}
